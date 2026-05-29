@@ -32,7 +32,7 @@ const RenderPage = (props: Props) => {
             case "creative-ai":
                 return <CreateAiPage onBack={() => setPage("create")} />
             case "create-scratch":
-                return <CreateScratchPage />
+                return <CreateScratchPage onBack={() => setPage("create")} />
             default:
                 return null;
         }

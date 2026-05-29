@@ -2,6 +2,7 @@
 
 import { client } from "@/lib/prisma"
 import { onAuthenticateUser } from "./user"
+import { OutlineCard } from "@/lib/types"
 
 export const getAllProjects = async () => {
 
@@ -168,4 +169,57 @@ export const deleteProject = async (projectId: string) => {
             error: "Internal server error"
         }
     }    
+}
+
+export const createProject = async (title: string, outlines : OutlineCard[]) => {
+
+    try {
+
+        if (!title || !outlines || outlines.length === 0) {
+            return {
+                status: 400,
+                error: "Title and outlines are required"
+            }
+        }
+
+        const allOutlines = outlines.map((outline) => ({
+            title: outline.title,
+        }))
+
+        const checkUser = await onAuthenticateUser()
+        if (checkUser.status !== 200 || !checkUser.user) {
+            return {
+                status: 403,
+                error: "User not authenticated"
+            }
+        }
+
+        const newProject = await client.project.create({
+            data: {
+                title,
+                userId: checkUser.user?.id,
+                outlines: allOutlines,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        })
+
+        if (!newProject) {
+            return {
+                status: 404,
+                error: "Project not found"
+            }
+        }
+
+        return {
+            status: 200,
+            project: newProject
+        }
+    } catch (error) {
+        console.error("Error", error)
+        return {
+            status: 500,
+            error: "Internal server error"
+        }
+    }
 }
