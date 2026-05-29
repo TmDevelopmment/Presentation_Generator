@@ -2,6 +2,6 @@
 
 export const generateCreativeAiPrompt = async (prompt: string) => {
 
-    
+    const finalPrompt =
 
 }

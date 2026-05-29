@@ -12,7 +12,7 @@ import useCreativeAiStore from "@/store/useCreativeAiStore";
 import { motion } from "framer-motion";
 import { ChevronLeft, Loader2, RotateCw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CardList from "../common/CardList";
 import usePromptStore from "@/store/usePromptStore";
 import RecentPrompts from "../GenerateAI/RecentPrompts";
@@ -70,6 +70,10 @@ const CreateAiPage = ({ onBack }: Props) => {
         toast.error("Failed to generate outlines. Please try again.");
     }
   };
+
+  useEffect(() => {
+    setNumberOfCards(outlines.length);
+  }, [outlines.length]);
 
   return (
     <motion.div
