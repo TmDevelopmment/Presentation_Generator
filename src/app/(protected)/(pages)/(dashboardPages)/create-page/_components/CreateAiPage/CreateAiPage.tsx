@@ -18,6 +18,8 @@ import usePromptStore from "@/store/usePromptStore";
 import RecentPrompts from "../GenerateAI/RecentPrompts";
 import { toast } from "sonner";
 import { generateCreativeAiPrompt } from "@/actions/chatgpat";
+import { v4 as uuidv4 } from "uuid";
+import { OutlineCard } from "@/lib/types";
 
 type Props = {
   onBack: () => void;
@@ -54,21 +56,40 @@ const CreateAiPage = ({ onBack }: Props) => {
     resetOutlines();
   };
 
-  const handleGenerate = () => {};
+  const handleGenerate = () => { };
 
   const generateOutlines = async () => {
     if (currentAiPrompt === "") {
-        toast.error("Please enter a prompt");
-        return;
+      toast.error("Please enter a prompt");
+      return;
     }
     setIsGenerating(true);
-    try {
-        const res = await generateCreativeAiPrompt(currentAiPrompt)
-
-        // WIP - use open ai Complete the funtion
-    } catch (error) {
-        toast.error("Failed to generate outlines. Please try again.");
+    const res = await generateCreativeAiPrompt(currentAiPrompt);
+    if (res.status === 200 && res?.data?.outlines) {
+      const cardData: OutlineCard[] = [];
+      res.data.outlines.map((outline: string, index: number) => {
+        const newCard: OutlineCard = {
+          id: uuidv4(),
+          title: outline,
+          order: index + 1,
+        }
+        cardData.push(newCard);
+      })
+      addMultipleOutlines(cardData);
+      setNumberOfCards(cardData.length);
+      toast.success("Success",
+        {
+          description: "Outlines generated successfully",
+        }
+      )
+    } else {
+      toast.error("Failed to generate outlines",
+        {
+          description: res?.data?.error || "An error occurred while generating outlines",
+        }
+      )
     }
+    setIsGenerating(false);
   };
 
   useEffect(() => {
@@ -197,7 +218,7 @@ const CreateAiPage = ({ onBack }: Props) => {
         </Button>
       )}
 
-      {prompts.length > 0 && <RecentPrompts/>}
+      {prompts.length > 0 && <RecentPrompts />}
     </motion.div>
   );
 };

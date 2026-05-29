@@ -59,6 +59,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      openai:
+        specifier: ^6.39.1
+        version: 6.39.1(ws@7.5.11(bufferutil@4.1.0)(utf-8-validate@6.0.6))(zod@3.25.76)
       postcss:
         specifier: ^8.5.15
         version: 8.5.15
@@ -4150,6 +4153,18 @@ packages:
   open@7.4.2:
     resolution: {integrity: sha512-MVHddDVweXZF3awtlAS+6pgKLlm/JgxZ90+/NBurBoQctVOOB/zDdVjcyPzQ+0laDGbsWgrRkflI65sQeOgT9Q==}
     engines: {node: '>=8'}
+
+  openai@6.39.1:
+    resolution: {integrity: sha512-z3dO9fEWOXBzlXynVb/xZ/tujzUjFWQWn3C0n0mw6Vo0zJTbEkaN4b2cLWjhJ6haJQx8LlREoafHRl+Gu/Hl+A==}
+    hasBin: true
+    peerDependencies:
+      ws: ^8.18.0
+      zod: ^3.25 || ^4.0
+    peerDependenciesMeta:
+      ws:
+        optional: true
+      zod:
+        optional: true
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -9647,6 +9662,11 @@ snapshots:
     dependencies:
       is-docker: 2.2.1
       is-wsl: 2.2.0
+
+  openai@6.39.1(ws@7.5.11(bufferutil@4.1.0)(utf-8-validate@6.0.6))(zod@3.25.76):
+    optionalDependencies:
+      ws: 7.5.11(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      zod: 3.25.76
 
   optionator@0.9.4:
     dependencies:
