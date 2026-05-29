@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-react'
 import React from 'react'
 
 type Props = {
-    children?: React.ReactNode
+    children: React.ReactNode
     className?: string
     description: string
     loading?: boolean
@@ -15,7 +15,10 @@ type Props = {
 
 const AlertDialogBox = ({children, className, description, loading, onClick, open, handleOpen}: Props) => {
   return (
-    <AlertDialog>
+    <AlertDialog
+    open={open}
+    onOpenChange={handleOpen}
+    >
         <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
         <AlertDialogContent>
             <AlertDialogHeader>

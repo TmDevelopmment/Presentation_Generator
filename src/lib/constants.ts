@@ -1,5 +1,5 @@
 import { BookTemplate, FolderIcon, HomeIcon, SettingsIcon, TrashIcon } from "lucide-react";
-import type { Transition, Variants } from "framer-motion";
+import { stagger, type Transition, type Variants } from "framer-motion";
 import { Theme } from "./types";
 
 export const data = {
@@ -40,13 +40,20 @@ const springTransition: Transition = {
 
 export const containerVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: springTransition },
-} satisfies Variants
+    visible: { opacity: 1, y: 0, },
+    transition: {
+        staggerChildren: 0.1,
+    },
+}
 
 export const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: springTransition },
-} satisfies Variants
+    visible: { opacity: 1, y: 0 },
+    transition: {
+        type: "spring",
+        stiffness: 100,
+    },
+}
 
 export const themes: Theme[] = [
     {
@@ -131,4 +138,26 @@ export const themes: Theme[] = [
         sidebarColor: "#e7e5e4",
         type: "light",
     },
+]
+
+export const CreatePageCard = [
+    {
+        title: "Use a",
+        highlightedText: "Template",
+        description: "Start with a pre-designed template and customize it to your needs.",
+        type: "template",
+    },
+    {
+        title: "Generate with",
+        highlightedText: "Creative AI",
+        description: "Let our AI generate a presentation for you based on your input.",
+        type: "creative-ai",
+        highlight: true,
+    },
+    {
+        title: "Start from",
+        highlightedText: "Scratch",
+        description: "Create a presentation from a blank canvas and unleash your creativity.",
+        type: "create-scratch",
+    }
 ]

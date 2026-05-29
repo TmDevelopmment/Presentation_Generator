@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function timeAgo(timestamp: string) {
-  const date = new Date(timestamp);
+  const now = new Date(timestamp);
   const diffInSeconds = Math.floor(now.getTime() - new Date(timestamp).getTime()) / 1000;
 
   const intervals = [

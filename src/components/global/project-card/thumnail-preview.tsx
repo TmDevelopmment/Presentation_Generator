@@ -1,6 +1,6 @@
 import { Slide, Theme } from '@/lib/types'
 import { cn } from '@/lib/utils'
-import Image from 'next/image'
+import { Image } from 'lucide-react'
 import React from 'react'
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 const ThumnailPreview = ({ slide, theme }: Props) => {
   return (
     <div className={cn(
-        'w-full relative aspect-video rounded-lg overflow-hidden transition-all duration-200'
+        'w-full relative aspect-video rounded-lg overflow-hidden transition-all duration-200 p-2'
     )}
     style={{
         fontFamily: theme.fontFamily,
@@ -24,8 +24,8 @@ const ThumnailPreview = ({ slide, theme }: Props) => {
                 This is the slide
             </div>
         ) : (
-            <div className="w-full h-full flex items-center justify-center text-sm text-gray-500">
-                <Image src="/images/placeholder.png" alt="placeholder" className="w-6 h-6 text-gray-500" />
+            <div className="w-full h-full flex items-center justify-center text-sm bg-gray-600 text-gray-500 p-4">
+                <Image className="w-6 h-6 text-gray-500" />
             </div>
         )}
     </div>

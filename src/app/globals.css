@@ -138,3 +138,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.bg-vivid-gradient {
+  background: linear-gradient(180deg, #F55C7A 0%, #F6BC66 100%);
+}
