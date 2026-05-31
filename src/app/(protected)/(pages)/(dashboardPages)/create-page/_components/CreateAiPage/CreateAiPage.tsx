@@ -18,8 +18,10 @@ import usePromptStore from "@/store/usePromptStore";
 import RecentPrompts from "../GenerateAI/RecentPrompts";
 import { toast } from "sonner";
 import { generateCreativeAiPrompt } from "@/actions/chatgpat";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4, v4 } from "uuid";
 import { OutlineCard } from "@/lib/types";
+import { createProject } from "@/actions/project";
+import { useSlideStore } from "@/store/useSlideStore";
 
 type Props = {
   onBack: () => void;
@@ -42,6 +44,7 @@ const CreateAiPage = ({ onBack }: Props) => {
   const [editText, setEditText] = useState("");
   const [loading, setLoading] = useState(false);
   const { prompts, addPrompt } = usePromptStore();
+  const { setProject } = useSlideStore();
 
   const handleBack = () => {
     onBack();
@@ -56,7 +59,45 @@ const CreateAiPage = ({ onBack }: Props) => {
     resetOutlines();
   };
 
-  const handleGenerate = () => { };
+  const handleGenerate = async () => {
+    setIsGenerating(true);
+    if (outlines.length === 0) {
+      toast.error("Error", {
+        description: "Please add at least one outline card before generating.",
+      })
+      return;
+    }
+    try {
+      const res = await createProject(currentAiPrompt, outlines.slice(0, numberOfCards));
+      if (res.status !== 200 || !res?.project) { {
+        toast.error("Error", {
+          description: res?.data?.error || "An error occurred while creating the project.",
+        })
+        return;
+      }
+      } else {
+        setProject(res.project);
+        addPrompt({
+          id: v4(),
+          title: currentAiPrompt || outlines?.[0]?.title || "Untitled Prompt",
+          outlines: outlines,
+          createdAt: new Date().toISOString(),
+        })
+        toast.success("Success", {
+          description: "Project created successfully. Redirecting to dashboard...",
+        })
+        router.push(`/presentation/${res.project.id}/select-theme`);
+        setCurrentAiPrompt("");
+        resetOutlines();
+      }
+    } catch (error) {
+      toast.error("Error", {
+        description: "An error occurred while generating the presentation.",
+      })
+    } finally {
+      setIsGenerating(false);
+    }
+   };
 
   const generateOutlines = async () => {
     if (currentAiPrompt === "") {
