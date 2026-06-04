@@ -12,15 +12,16 @@ type Props = {};
 
 const RecentPrompts = (props: Props) => {
     const { prompts, setPage } = usePromptStore();
-    const { addMulipleOutlines, setCurrentAiPrompt } = useCreativeAiStore();
+    const { addMultipleOutlines, setCurrentAiPrompt } = useCreativeAiStore();
 
 
     const handleEdit = (id: string) => {
         const prompt = prompts.find((p) => p?.id === id);
         if (prompt) {
             setPage("creative-ai");
-            addMulipleOutlines(prompt?.outlines);
+            addMultipleOutlines(prompt.outlines);
             setCurrentAiPrompt(prompt?.title);
+            return;
         }
 
         toast.error("Error", {

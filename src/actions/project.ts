@@ -182,10 +182,6 @@ export const createProject = async (title: string, outlines : OutlineCard[]) => 
             }
         }
 
-        const allOutlines = outlines.map((outline) => ({
-            title: outline.title,
-        }))
-
         const checkUser = await onAuthenticateUser()
         if (checkUser.status !== 200 || !checkUser.user) {
             return {
@@ -198,7 +194,7 @@ export const createProject = async (title: string, outlines : OutlineCard[]) => 
             data: {
                 title,
                 userId: checkUser.user?.id,
-                outlines: allOutlines,
+                outlines: outlines.map((outline) => outline.title),
                 createdAt: new Date(),
                 updatedAt: new Date(),
             }
