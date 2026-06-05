@@ -3,11 +3,10 @@ import { layouts } from '@/lib/constants';
 import { Layout } from '@/lib/types';
 import { useSlideStore } from '@/store/useSlideStore';
 import { useDrag } from 'react-dnd';
-import LayoutPreviewItem from './LayoutPreviewItem';
-
+import LayoutPreviewItem from './components-tab/LayoutPreviewItem';
 
 export const DraggableLayoutItem = ({
-  components,
+  component,
   icon,
   layoutType,
   name,
@@ -19,7 +18,7 @@ export const DraggableLayoutItem = ({
 
     const [ { isDragging }, dragRef] = useDrag(() => ({
       type: 'layout',
-      item: { type, layoutType, components },
+      item: { type, layoutType, component },
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
@@ -37,7 +36,7 @@ export const DraggableLayoutItem = ({
           name={name}
           Icon={icon}
           type={type}
-          component={components}
+          component={component}
         />
     </div>
   )

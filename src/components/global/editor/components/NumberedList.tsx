@@ -220,7 +220,7 @@ export const TodoList: React.FC<ListProps> = ({
                         type="checkbox"
                         className="form-checkbox"
                         checked={item.startsWith('[x] ')}
-                        onChange={() => => toggleCheckbox(index)}
+                        onChange={() => toggleCheckbox(index)}
                         disabled={!isEditable}
                     />
                     <ListItem

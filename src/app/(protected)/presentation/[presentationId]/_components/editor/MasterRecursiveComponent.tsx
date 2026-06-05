@@ -12,7 +12,7 @@ import ColumnComponent from '@/components/global/editor/components/ColumnCompone
 import CustomImage from '../../../../../../components/global/editor/components/ImageComponent'
 import BlockQuote from '@/components/global/editor/components/BlockQuote'
 import NumberedList, { TodoList } from '@/components/global/editor/components/NumberedList'
-import BulletedList from '@/components/global/editor/components/BulletedList'
+import BulletedList from '@/components/global/editor/components/NumberedList'
 import CalloutBox from '@/components/global/editor/components/CalloutBox'
 import CodeBlock from '@/components/global/editor/components/CodeBlock'
 import TableOfContents from '@/components/global/editor/components/TableOfContents'

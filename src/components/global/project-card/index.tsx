@@ -96,10 +96,10 @@ const ProjectsCard = ({
       className={`group w-full flex flex-col gap-y-3 rounded-xl p-3 transition-colors ${isDeleted && "hover:bg-muted/50"} `}
     >
       <div className="relative aspect-[16/10] overflow-hidden rounded-lg cursor-pointer">
-        {/* <ThumnailPreview 
+        <ThumnailPreview 
         theme={theme}
-        // slide={JSON.parse(JSON.stringify(slideData))?.[0]}
-        /> */}
+        slide={JSON.parse(JSON.stringify(slideData))?.[0]}
+        />
       </div>
       <div className="w-full">
         <div className="space-y-1">

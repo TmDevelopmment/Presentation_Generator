@@ -1,5 +1,6 @@
 "use client"
 
+import { cn } from "@/lib/utils"
 import { forwardRef, useEffect, useRef } from "react"
 
 interface HeadingProps
@@ -34,8 +35,7 @@ const creatHeading = (displayName: string, defaultClassName: string) => {
             return (
                 <textarea
                 className={cn(
-                    `w-full bg-transparent ${defaultClassName} ${previewClassName} font-normal text-gray-900 placeholder:text-gray-300 focus:outline-none resize-none overflow-hidden leading-tight`,
-                    className 
+                    `w-full bg-transparent ${defaultClassName} ${previewClassName} font-normal text-gray-900 placeholder:text-gray-300 focus:outline-none resize-none overflow-hidden leading-tight`, 
                 )}
                 style={{
                     padding: 0,

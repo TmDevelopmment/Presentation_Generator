@@ -16,7 +16,7 @@ const ThemeChooser = (props: Props) => {
 
     const { setTheme } = useTheme();
 
-    const handleThemeChange = (theme: Theme) => {
+    const handleThemeChange = async (theme: Theme) => {
         if (!project) {
             toast.error("Error", {
                 description: "No project found"
