@@ -5,6 +5,7 @@ import { ContentItem, ContentType, Slide } from "@/lib/types";
 import { currentUser } from "@clerk/nextjs/server";
 import OpenAI from "openai";
 import { v4 as uuidv4 } from "uuid";
+import { GoogleGenAI } from '@google/genai';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -15,6 +16,8 @@ const openai = new OpenAI({
     "X-Title": "AI Presentation App",
   },
 });
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export const generateCreativeAiPrompt = async (prompt: string) => {
   const finalPrompt = `Create a coherent and relavant outline for the following prompt: ${prompt}. The outline should be consit of at least 6 points, with each point written as a single sentence.Ensure the outline is well-structured and directly related to the topic.
@@ -563,15 +566,15 @@ const replaceImagePlaceholders = async (layout: Slide) => {
 
 export const generateLayoutJson = async (outlineArray: string[]) => {
   const prompt = `
-  You are a highly creative AI that generates JSON-based layouts for presentations. I will provide you with an array of outlines, and for each outline, you must generate a unique and creative layout.Use the existing layouts as examples for structure and design, and generate unique designs based on the provided outlines.
+  You are a highly creative AI that generates JSON-based layouts for presentations. I will provide you with an array of outlines, and for each outline, you must generate a unique and creative layout. Use the existing layouts as examples for structure and design, and generate unique designs based on the provided outlines.
   
   ### Guidelines:
   1. Write layouts based on the specific outline provided.
-  2.Use diverse and engaging designs,ensuring each layout is unique
-  3.Adhere to the structure of the existing layouts, but feel free to innovate and create new design elements.
-  4.Fill placeholder data into content fields where required.
-  5. Generate unique image placeholders for the 'content' property of image components and also alt yext according to the outline.
-  6. Ensure the proper formatting and schema alignment for thr output JSON.
+  2. Use diverse and engaging designs, ensuring each layout is unique.
+  3. Adhere to the structure of the existing layouts, but feel free to innovate and create new design elements.
+  4. Fill placeholder data into content fields where required.
+  5. Generate unique image placeholders for the 'content' property of image components and also alt text according to the outline.
+  6. Ensure the proper formatting and schema alignment for the output JSON.
   
   ### Example Layouts:
   ${JSON.stringify(existingLayouts, null, 2)}
@@ -584,52 +587,47 @@ export const generateLayoutJson = async (outlineArray: string[]) => {
   - Properly filled content, including placeholders for image components.
   - Clear and well-structured JSON data.
   For Images
-  - The alt text should describe the image clearly and conciesly.
+  - The alt text should describe the image clearly and concisely.
   - Focus on the main subject(s) of the image and any relevant details such as colors, emotions, or actions depicted.
   - Ensure the alt text is relevant to the content of the presentation and enhances the understanding of the image's purpose within the layout.
   - Avoid using terms like "image of" or "picture of" and instead focus directly on the content and meaning.
   
-  Output the layout in JSON format.ensure there are no duplicate layouts across the array.
+  Output the layout in JSON format. Ensure there are no duplicate layouts across the array.
   `;
 
   try {
-
-    console.log("Prompt for layout generation:", prompt);
-
-    const completion = await openai.chat.completions.create({
-      model: "openrouter/free",
-      messages: [
-        {
-          role: "system",
-          content: "You generate JSON layouts for presentation",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
+    // Using gemini-2.5-flash as the standard fast/capable model for text/JSON tasks
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: {
+        // System instructions are passed inside the config object
+        systemInstruction: "You generate JSON layouts for presentation",
+        // Enforce JSON output so Gemini returns a pure, parseable JSON string
+        responseMimeType: "application/json",
+      }
     });
 
-    const responseContent = completion.choices[0].message?.content;
+    const responseContent = response.text;
 
     if (!responseContent) {
       return {
         status: 400,
-        error: "No response from OpenAI",
+        error: "No response from Gemini",
       };
     }
 
     let jsonResponse;
     try {
-      const cleanedContent = responseContent
-        .replace(/```json/g, "")
-        .replace(/```/g, "")
-        .trim();
-      jsonResponse = JSON.parse(cleanedContent);
+      // Because responseMimeType is set to application/json, 
+      // we can parse it safely without needing regex string cleanup.
+      jsonResponse = JSON.parse(responseContent.trim());
+      await Promise.all(jsonResponse.map(replaceImagePlaceholders));
+      
     } catch (error) {
       return {
         status: 500,
-        error: "Invalid JSON response from OpenAI",
+        error: "Invalid JSON response from Gemini",
       };
     }
 
@@ -670,12 +668,12 @@ export const generateLayout = async (projectId: string, theme: string) => {
       },
     });
 
-    if (!userExist || userExist?.subscription) {
+    if (!userExist || !userExist?.subscription) {
       return {
         status: 403,
         error: !userExist
           ? "User not found"
-          : "User does not have an active subscription",
+          : "User does not have an active subscription"
       };
     }
 

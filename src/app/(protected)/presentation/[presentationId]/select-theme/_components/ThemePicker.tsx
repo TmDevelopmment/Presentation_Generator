@@ -20,42 +20,43 @@ const ThemePicker = ({ selectedTheme, themes, onThemeSelect }: Props) => {
     const router = useRouter();
     const params = useParams();
 
-    const { project, setSlides, currentTheme } = useSlideStore();
+    const { project, setSlides } = useSlideStore();
     const [loading, setLoading] = useState(false);
 
     const handleGenerateTheme = async () => {
-        setLoading(true);
         if (!selectedTheme) {
             toast.error("Error", {
                 description: "Please select a theme"
             })
             return;
         }
-        if (project?.id === '') {
+        if (!project?.id) {
             toast.error("Error", {
                 description: "Project not found"
             })
             router.push('/create-page')
             return;
         }
+
+        setLoading(true);
         try {
             const res = await generateLayout(
                 params.presentationId as string,
-                currentTheme.name
+                selectedTheme.name
             )
 
-            if (res.status !== 200 && !res?.data) {
-                throw new Error(res.error || "Failed to generate theme");
+            if (res.status !== 200 || !res?.data) {
+                throw new Error(res.error || res?.data?.error || "Failed to generate theme");
             }
             toast.success("Success", {
                 description: "Theme generated successfully"
             })
-            setSlides(res.data);
             router.push(`/presentation/${project?.id}`);
+            setSlides(res.data);
 
         } catch (error) {
             toast.error("Error", {
-                description: "Failed to generate theme. Please try again."
+                description: error instanceof Error ? error.message : "Failed to generate theme. Please try again."
             })
         } finally {
             setLoading(false);
