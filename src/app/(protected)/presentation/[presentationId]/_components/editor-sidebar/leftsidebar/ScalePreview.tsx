@@ -2,6 +2,7 @@ import { Slide } from '@/lib/types';
 import { useSlideStore } from '@/store/useSlideStore';
 import React from 'react'
 import { MasterRecursiveComponent } from '../../editor/MasterRecursiveComponent';
+import { cn } from '@/lib/utils';
 
 type Props = {
     slide: Slide;
@@ -20,7 +21,7 @@ const ScalePreview = ({
   return (
     <div
     className={cn(
-        'w-full relative aspect-[16/9] rounded-lg overflow-hidden transition-all duration-200 p-2',
+        'w-full relative aspect-video rounded-lg overflow-hidden transition-all duration-200 p-2',
         isActive ? 'ring-2 ring-blue-500 ring-offset-2' : 'hover:ring-2 hover:ring-gray-200 hover:ring-offset-2',
     )}
     style={{

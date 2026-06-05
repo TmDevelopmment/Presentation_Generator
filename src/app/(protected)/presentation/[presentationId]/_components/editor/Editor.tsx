@@ -73,9 +73,15 @@ interface DraggableSlideProps {
     isEditable: boolean
 }
 
-export const DraggableSlide: React.FC<DraggableSlideProps> = ({ slide, index, moveSlide, handleDelete, isEditable }) => {
+export const DraggableSlide: React.FC<DraggableSlideProps> = ({ 
+    slide, 
+    index, 
+    moveSlide, 
+    handleDelete, 
+    isEditable 
+}) => {
 
-    const ref = useRef<HTMLDivElement>(null);
+    const ref = useRef(null);
     const { currentTheme, currentSlide, setCurrentSlide, updateContentItem } = useSlideStore();
     const [{ isDragging }, dragRef] = useDrag({
         type: "SLIDE",
@@ -125,7 +131,7 @@ export const DraggableSlide: React.FC<DraggableSlideProps> = ({ slide, index, mo
             isDragging ? "opacity-50" : "opacity-100",
         )}
             style={{
-                backgroundColor: currentTheme.gradientBgColor
+                backgroundColor: currentTheme.gradientBackground
             }}
             onClick={() => setCurrentSlide(index)}
         >
@@ -138,14 +144,13 @@ export const DraggableSlide: React.FC<DraggableSlideProps> = ({ slide, index, mo
                     isPreview={false}
                     isEditable={isEditable} />
             </div>
-            {isEditable &&
+            {isEditable && (
                 <Popover>
-                    <PopoverTrigger
-                        asChild
-                        className="absolute top-2 left-2">
+                    <PopoverTrigger asChild className="absolute top-2 left-2">
                         <Button
                             size="sm"
-                            variant="outline">
+                            variant="outline"
+                            >
                             <EllipsisVertical className="h-4 w-4" />
                             <span className="sr-only">Slide options</span>
                         </Button>
@@ -160,7 +165,8 @@ export const DraggableSlide: React.FC<DraggableSlideProps> = ({ slide, index, mo
                             </Button>
                         </div>
                     </PopoverContent>
-                </Popover>}
+                </Popover>
+            )}
         </div>
     )
 
@@ -265,7 +271,7 @@ const Editor = ({ isEditable }: Props) => {
     return (
         <div className="flex-1 flex flex-col h-full max-w-3xl mx-auto px-4 mb-20">
             {loading ? (
-                <div className="w-full flex flex-col px-4 space-y-6">
+                <div className="w-full flex flex-col space-y-6">
                     <Skeleton className="w-full h-52" />
                     <Skeleton className="w-full h-52" />
                     <Skeleton className="w-full h-52" />

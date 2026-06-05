@@ -2,6 +2,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSlideStore } from '@/store/useSlideStore';
 import { useEffect, useState } from 'react'
+import DraggableSidePreview from './DraggableSidePreview';
 
 type Props = {}
 
@@ -24,9 +25,10 @@ const LayoutPreview = (props: Props) => {
   return (
     <div className="w-72 h-full fixed left-0 top-20 border-r overflow-y-auto ">
       <ScrollArea
-      className="h-full w-full">
+      className="h-full w-full"
+      suppressHydrationWarning>
         {loding ? (
-          <div className="w-full px-4 flex flex-col gap-4">
+          <div className="w-full px-4 flex flex-col space-y-6">
             <Skeleton className="w-full h-20" />
             <Skeleton className="w-full h-20" />
             <Skeleton className="w-full h-20" />
